@@ -48,7 +48,7 @@ jobs:
       env:
         DOCKER_USER: ${{secrets.DOCKER_USER}}
         DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
-        IMAGE: zero101010/test-ci-node:GITHUB_SHA
+        IMAGE: zero101010/test-ci-node:$GITHUB_SHA
       run: |
         docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
         docker build -t $IMAGE .
