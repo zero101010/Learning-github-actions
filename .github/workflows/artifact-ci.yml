@@ -22,6 +22,7 @@ jobs:
           path: test.txt
   download-artifact:
     runs-on: ubuntu-latest
+    needs: create-artifact
     steps:
       - name: Download a single artifact
         uses: actions/download-artifact@v2
