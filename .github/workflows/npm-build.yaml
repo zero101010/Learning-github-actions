@@ -46,7 +46,7 @@ jobs:
     - uses: actions/checkout@v2
     - name: Docker push
       env:
-        DOCKER_USER: ${{secrets.DOCKER_USERNAME}}
+        DOCKER_USER: ${{secrets.DOCKER_USER}}
         DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
         IMAGE: zero101010/test-ci-node:GITHUB_SHA
       run: |
