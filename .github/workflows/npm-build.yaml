@@ -44,11 +44,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
+    - name: Get the Tag
+      id: get_tag_name
+      run: echo ::set-output name=GIT_TAG_NAME::${GITHUB_SHA}
     - name: Docker push
       env:
         DOCKER_USER: ${{secrets.DOCKER_USER}}
         DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
-        IMAGE: zero101010/test-ci-node:$GITHUB_SHA
+        IMAGE: zero101010/test-ci-node:${{ steps.get_tag_name.outputs.GIT_TAG_NAME}}
       run: |
         docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
         docker build -t $IMAGE .
