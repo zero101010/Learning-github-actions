@@ -20,3 +20,12 @@ jobs:
         with:
           name: output-test
           path: test.txt
+  download-artifact:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download a single artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: output-test
+      - name: Cat artifact
+        run: cat test.txt
