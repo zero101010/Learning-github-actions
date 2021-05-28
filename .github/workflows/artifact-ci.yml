@@ -12,9 +12,11 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       - name: Create file to upload
-        run: echo "Testando a gestão de artefatos entre os stages"
+        run: echo "Testando a gestão de artefatos entre os stages" > test.txt
+      - name: Cat the value inside new file
+        run: cat test.txt
       - name: Upload artifact to another job
         uses: actions/upload-artifact@v2
         with:
-          name: output-log-file
-          path: output.log
+          name: output-test
+          path: test.txt
