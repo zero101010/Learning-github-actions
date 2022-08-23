@@ -10,23 +10,28 @@ jobs:
         with:
         # Checkout as many commits as needed for the diff
           fetch-depth: 2
+      - shell: pwsh
+      # Give an id to the step, so we can reference it later
+        id: check_file_changed
+        run: |
+          # Diff HEAD with the previous commit
+          $diff = git diff --name-only HEAD^ HEAD
+          echo $diff
+          # Check if a file under docs/ or with the .md extension has changed (added, modified, deleted)
+          $SourceDiff = $diff | Where-Object { $_ -match '^./' -or $_ -match '.json$' }
+          echo $SourceDiff
+          $HasDiff = $SourceDiff.Length -gt 0
+          echo $HasDiff
+          # Set the output named "docs_changed"
+          Write-Host "::set-output name=docs_changed::$HasDiff"
+      
       - name: Set Up node version 12
         uses: actions/setup-node@v1
         with:
           node-version: '12'
-      - name: Get specific changed files
-        id: changed-files-specific
-        uses: tj-actions/changed-files@v28.0.0
-      - name: Black and Sort changed files
-        run: |
-          for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
-            echo $file
-            if [[ $file == *.json ]]; then
-              npm install
-              break
-            fi
-          done
-
+        if: steps.check_file_changed.outputs.docs_changed == 'True'
+        run: npm install
+      
       - name: Cache node modules
         uses: actions/cache@v2
         env:
