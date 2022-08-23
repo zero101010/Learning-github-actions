@@ -7,11 +7,25 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+        with:
+        # Checkout as many commits as needed for the diff
+          fetch-depth: 2
       - name: Set Up node version 12
         uses: actions/setup-node@v1
         with:
           node-version: '12'
-      - run: npm install
+      - name: Get specific changed files
+        id: changed-files-specific
+        uses: tj-actions/changed-files@v28.0.0
+      - name: Black and Sort changed files
+        run: |
+          for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
+            echo $file
+            if [[ $file == *.json ]]; then
+              npm install
+              break
+            fi
+          done
 
       - name: Cache node modules
         uses: actions/cache@v2
